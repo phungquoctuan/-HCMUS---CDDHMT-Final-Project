@@ -255,7 +255,7 @@
     const mercuryCurve =new THREE.EllipseCurve(
         0,0, //center x,y
         mercuryDistance,300,// radius x,y
-        0,2*Math.PI //starts, ens angles (0,360 degrees)
+        0,1*Math.PI //starts, ens angles (0,360 degrees)
       );
 
      //CREATE VENUS ********************************************
@@ -283,7 +283,7 @@
     const venusCurve =new THREE.EllipseCurve(
         0,0, //center x,y
         venusDistance,300,// radius x,y
-        0,2*Math.PI //starts, ens angles (0,360 degrees)
+        Math.PI //starts, ens angles (0,360 degrees)
       );
 
       //the render function does three things 
