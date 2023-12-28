@@ -131,68 +131,120 @@ function createPlanet(size, texture,position, ring, naturalSatellite) {
   return {planet, planetObj};
 }
 
-function createPlanetTrajectory(planet) {
+function planetMotion(θ,au,e) {
+  // Tính khoảng cách giữa hành tinh và Mặt Trời
+  let r = (au * (1 - e ** 2) / (1 + e * Math.cos(θ)));
 
-  planetPosition = planet.position
+  // Xác định vị trí của hành tinh trên màn hình
+  let x = r * Math.cos(θ);
+  let y = r * Math.sin(θ);
+
+  // Trả về vị trí của hành tinh
+  return { x, y };
 
 }
 
-const mercury = new createPlanet(4,mercuryTexture,20);
-const venus = new createPlanet(5,venusTexture,40);
-const earth = new createPlanet(5.56,earthTexture,60,null,{
+const mercuryDistance = 30
+const venusDistance = 50
+const earthDistance = 80
+const marsDistance = 120
+const jupiterDistance = 150
+const saturnDistance = 190
+const uranusDistance = 250
+const neptuneDistance = 300
+
+const mercuryPos = planetMotion(0,mercuryDistance,0.2).x
+const mercury = new createPlanet(4,mercuryTexture,mercuryPos);
+
+const venusPos = planetMotion(0,venusDistance,0.0685).x
+const venus = new createPlanet(5,venusTexture,venusPos);
+
+const earthPos = planetMotion(0,earthDistance,0.016).x
+const earth = new createPlanet(5.56,earthTexture,earthPos,null,{
   size: 1.39,
   texture: earthMoonTexture,
   planetDistance: 3,
 });
-const mars = new createPlanet(5,marsTexture,80);
-const jupiter = new createPlanet(6,jupiterTexture,100);
-const saturn = new createPlanet(8,saturnTexture,150,{
+
+const marsPos = planetMotion(0,marsDistance,0.09).x
+const mars = new createPlanet(5,marsTexture,marsPos);
+
+const jupiterPos = planetMotion(0,jupiterDistance,0.0489).x
+const jupiter = new createPlanet(6,jupiterTexture,jupiterPos);
+
+const saturnPos = planetMotion(0,saturnDistance,0.0545).x
+const saturn = new createPlanet(8,saturnTexture,saturnPos,{
   innerRadius: 10,
   outerRadius: 20,
   texture: saturnRingTexture
 });
-const uranus = new createPlanet(8.2,uranusTexture,200,{
+
+const uranusPos = planetMotion(0,uranusDistance,0.0466).x
+const uranus = new createPlanet(8.2,uranusTexture,uranusPos,{
   innerRadius: 10,
   outerRadius: 20,
   texture: uranusRingTexture
 });
-const neptune = new createPlanet(5,neptuneTexture,240);
+
+const neptunePos = planetMotion(0,neptuneDistance,0.0085).x
+const neptune = new createPlanet(5,neptuneTexture,neptunePos);
+
+const planetSpeed = 0.0005 ;
 
 
 function animate(){
 
+  const time = planetSpeed *performance.now(); //time in ms*value to slow orbit
+
   sun.rotateY(0.002);
 
+  let mercuryMotion = planetMotion(time,mercuryDistance,0.2)
   mercury.planet.rotateY(0.001);
-  mercury.planetObj.rotateY(0.001);
+  mercury.planetObj.position.x = mercuryMotion.x - mercuryDistance
+  mercury.planetObj.position.z = mercuryMotion.y
 
+  let venusMotion = planetMotion(time,venusDistance,0.0685)
   venus.planet.rotateY(0.0012);
-  venus.planetObj.rotateY(0.0015);
+  venus.planetObj.position.x = venusMotion.x - venusDistance
+  venus.planetObj.position.z = venusMotion.y
 
+  let earthMotion = planetMotion(time,earthDistance,0.016)
   earth.planet.rotateY(0.012);
-  earth.planetObj.rotateY(0.0012);
-  earth.satellite.rotateY(0.012);
+  earth.planetObj.position.x = earthMotion.x - earthDistance
+  earth.planetObj.position.z = earthMotion.y
 
+  earth.satellite.rotateY(0.012);
   const moonDistance = 9;
   const moonSpeed = 10; //  disatance between the midlle of the moon and the middle of the earth 
   const angle = earth.planetObj.rotation.y;
   earth.satelliteObj.position.x = Math.cos(angle*moonSpeed) * moonDistance;
   earth.satelliteObj.position.z = Math.sin(angle*moonSpeed) * moonDistance;
 
+  let marsMotion = planetMotion(time,marsDistance,0.09)
   mars.planet.rotateY(0.013);
-  mars.planetObj.rotateY(0.0019);
+  mars.planetObj.position.x = marsMotion.x - marsDistance
+  mars.planetObj.position.z = marsMotion.y
 
+  let jupiterMotion = planetMotion(time,jupiterDistance,0.0489)
   jupiter.planet.rotateY(0.04);
-  jupiter.planetObj.rotateY(0.0023);
+  jupiter.planetObj.position.x = jupiterMotion.x - jupiterDistance
+  jupiter.planetObj.position.z = jupiterMotion.y
 
-  saturn.planet.rotateY(0.01);
-  saturn.planetObj.rotateY(0.0021);
+  let saturnMotion = planetMotion(time,saturnDistance,0.0545)
+  saturn.planet.rotateY(0.04);
+  saturn.planetObj.position.x = saturnMotion.x - saturnDistance
+  saturn.planetObj.position.z = saturnMotion.y
 
-  uranus.planet.rotateY(0.01);
-  uranus.planetObj.rotateY(0.0015);
+  let uranusMotion = planetMotion(time,uranusDistance,0.0466)
+  uranus.planet.rotateY(0.012);
+  uranus.planetObj.position.x = uranusMotion.x - uranusDistance
+  uranus.planetObj.position.z = uranusMotion.y
 
+  let neptuneMotion = planetMotion(time,neptuneDistance,0.0085)
   neptune.planet.rotateY(0.01);
-  neptune.planetObj.rotateY(0.001);
+  neptune.planetObj.position.x = neptuneMotion.x - neptuneDistance
+  neptune.planetObj.position.z = neptuneMotion.y
+
 
   orbit.update();
 
