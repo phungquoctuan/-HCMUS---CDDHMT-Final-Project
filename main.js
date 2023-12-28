@@ -191,24 +191,33 @@ const neptune = new createPlanet(5,neptuneTexture,neptunePos);
 
 const planetSpeed = 0.0005 ;
 
+const earthSpeed = 0.0002;
+const mercurySpeed = earthSpeed*5;
+const venusSpeed = earthSpeed*3;
 
 function animate(){
 
-  const time = planetSpeed *performance.now(); //time in ms*value to slow orbit
+  const time = planetSpeed * performance.now(); //time in ms*value to slow orbit
+
+  const earthTime = earthSpeed * performance.now(); 
+  const mercuryTime = mercurySpeed * performance.now(); 
+  const venusTime = venusSpeed * performance.now(); 
+
+  console.log(time)
 
   sun.rotateY(0.002);
 
-  let mercuryMotion = planetMotion(time,mercuryDistance,0.2)
+  let mercuryMotion = planetMotion(mercuryTime,mercuryDistance,0.2)
   mercury.planet.rotateY(0.001);
   mercury.planetObj.position.x = mercuryMotion.x - mercuryDistance
   mercury.planetObj.position.z = mercuryMotion.y
 
-  let venusMotion = planetMotion(time,venusDistance,0.0685)
+  let venusMotion = planetMotion(venusTime,venusDistance,0.0685)
   venus.planet.rotateY(0.0012);
   venus.planetObj.position.x = venusMotion.x - venusDistance
   venus.planetObj.position.z = venusMotion.y
 
-  let earthMotion = planetMotion(time,earthDistance,0.016)
+  let earthMotion = planetMotion(earthTime,earthDistance,0.016)
   earth.planet.rotateY(0.012);
   earth.planetObj.position.x = earthMotion.x - earthDistance
   earth.planetObj.position.z = earthMotion.y
